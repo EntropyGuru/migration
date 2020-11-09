@@ -1,0 +1,22 @@
+az account list -o table
+az account set --subscription <id Twojej subskrypcji>
+az account list -o table
+
+az group create --location westeurope --name onprem
+
+az network vnet create --name onprem-network --location westeurope --address-prefixes 10.0.0.0/8 --subnet-name default --resource-group onprem
+
+az vm create --resource-group onprem --name webapp-vm --image UbuntuLTS --admin-username master --generate-ssh-keys
+
+
+ssh master@<vm ip>
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+sudo apt-get update 
+sudo apt-get install mssql-tools unixodbc-dev
+echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+source ~/.bashrc
+tmux
+sqlcmd -S 10.0.0.4 -U master -P P@ssw0RD_2020
+
+az vm create --resource-group onprem --name appliance --image win2016datacenter --admin-username master --admin-password P@ssw0RD_2020
