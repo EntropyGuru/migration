@@ -6,7 +6,7 @@ az group create --location westeurope --name onprem
 
 az network vnet create --name onprem-network --location westeurope --address-prefixes 10.0.0.0/8 --subnet-name default --resource-group onprem
 
-az vm create --resource-group onprem --name webapp-vm --image UbuntuLTS --admin-username master --generate-ssh-keys
+az vm create --resource-group onprem --name webapp2-vm --image UbuntuLTS --admin-username master --generate-ssh-keys --vnet-name onprem-network --subnet default
 
 
 ssh master@<vm ip>
